@@ -1,8 +1,8 @@
 ﻿namespace ProgrammingAnalystExercise
 {
-    public class Library
+  public class Library
     {
-        private List<Book> books = new List<Book>();
+        private readonly List<Book> books = new List<Book>();//Changed the `books` field in the Library class to be readonly.
 
         public Library()
         {
@@ -14,7 +14,7 @@
         public void AddBook(Book book)
         {
             books.Add(book);
-            Console.WriteLine($"The book {book.Title} has been added to the Library");
+            Console.WriteLine($"The book '{book.Title}' has been added to the Library");
         }
 
         public void BorrowBook(string title)
@@ -57,7 +57,7 @@
             }
         }
 
-        private Book? FindBook(string title)
+        private Book FindBook(string title)
         {
             foreach (var book in books)
             {
@@ -66,7 +66,9 @@
                     return book;
                 }
             }
-            return new Book(title);
+            Console.WriteLine($"The book '{title}' was not found in the library.");
+            return null;//Updated the FindBook method to print a message if the book is not found and return null
         }
     }
+
 }
