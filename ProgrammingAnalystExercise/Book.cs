@@ -1,8 +1,8 @@
 ﻿namespace ProgrammingAnalystExercise
 {
-    public class Book
+       public class Book
     {
-        public string Title { get; private set; }
+        public string Title { get; }// Made the setter for the Title property in the Book class private.
         public bool IsBorrowed { get; private set; }
 
         public Book(string title)
@@ -16,7 +16,7 @@
             if (!IsBorrowed)
             {
                 IsBorrowed = true;
-                Console.WriteLine($"The book '{Title}' has been checked out.");
+                Console.WriteLine($"The book '{Title}' has been checked out.");//Ensured consistent usage of string interpolation in Console.WriteLine statements.
             }
             else
             {
@@ -37,4 +37,6 @@
             }
         }
     }
+
+
 }
