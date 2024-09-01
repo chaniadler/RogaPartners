@@ -2,12 +2,12 @@
 {
        public class Book
     {
-        public string Title { get; }// Made the setter for the Title property in the Book class private.
+        public string Title { get; }
         public bool IsBorrowed { get; private set; }
 
         public Book(string title)
         {
-            Title = title;
+            Title = title ?? throw new ArgumentNullException(nameof(title));
             IsBorrowed = false;
         }
 
@@ -16,7 +16,7 @@
             if (!IsBorrowed)
             {
                 IsBorrowed = true;
-                Console.WriteLine($"The book '{Title}' has been checked out.");//Ensured consistent usage of string interpolation in Console.WriteLine statements.
+                Console.WriteLine($"The book '{Title}' has been checked out.");
             }
             else
             {
@@ -36,7 +36,7 @@
                 Console.WriteLine($"The book '{Title}' was not borrowed.");
             }
         }
-    }
+    }       
 
 
 }

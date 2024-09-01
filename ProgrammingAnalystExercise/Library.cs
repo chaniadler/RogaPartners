@@ -1,8 +1,9 @@
 ﻿namespace ProgrammingAnalystExercise
 {
-  public class Library
+    public class Library
     {
-        private readonly List<Book> books = new List<Book>();//Changed the `books` field in the Library class to be readonly.
+        private readonly List<Book> books = new List<Book>();
+        private readonly object _lock = new object();
 
         public Library()
         {
@@ -13,8 +14,20 @@
 
         public void AddBook(Book book)
         {
-            books.Add(book);
-            Console.WriteLine($"The book '{book.Title}' has been added to the Library");
+            if (book == null)
+            {
+                throw new ArgumentNullException(nameof(book), "Book cannot be null.");
+            }
+            if (string.IsNullOrWhiteSpace(book.Title))
+            {
+                throw new ArgumentException("Book title cannot be empty or whitespace.");
+            }
+
+            lock (_lock)
+            {
+                books.Add(book);
+                Log($"The book '{book.Title}' has been added to the Library.");
+            }
         }
 
         public void BorrowBook(string title)
@@ -26,7 +39,7 @@
             }
             else
             {
-                Console.WriteLine($"The book '{title}' was not found in the library.");
+                Log($"The book '{title}' was not found in the library.");
             }
         }
 
@@ -39,36 +52,43 @@
             }
             else
             {
-                Console.WriteLine($"The book '{title}' was not found in the library.");
+                Log($"The book '{title}' was not found in the library.");
             }
         }
 
         public void RemoveBook(string title)
         {
-            var book = FindBook(title);
-            if (book != null)
+            lock (_lock)
             {
-                books.Remove(book);
-                Console.WriteLine($"The book '{title}' has been removed from the library.");
-            }
-            else
-            {
-                Console.WriteLine($"The book '{title}' was not found in the library.");
+                var book = FindBook(title);
+                if (book != null)
+                {
+                    books.Remove(book);
+                    Log($"The book '{title}' has been removed from the library.");
+                }
+                else
+                {
+                    Log($"The book '{title}' was not found in the library.");
+                }
             }
         }
 
-        private Book FindBook(string title)
+        private Book? FindBook(string title)
         {
-            foreach (var book in books)
-            {
-                if (book.Title == title)
-                {
-                    return book;
-                }
-            }
-            Console.WriteLine($"The book '{title}' was not found in the library.");
-            return null;//Updated the FindBook method to print a message if the book is not found and return null
+            return books.FirstOrDefault(b => b.Title == title);
+        }
+
+        private void Log(string message)
+        {
+            Console.WriteLine(message);
+        }
+
+        public IEnumerable<Book> GetBooks()
+        {
+            return books.AsReadOnly();
         }
     }
+
+
 
 }
