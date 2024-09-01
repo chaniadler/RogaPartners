@@ -80,7 +80,6 @@
 
         private void Log(string message)
         {
-            // Implement logging logic here
             Console.WriteLine(message);
         }
 
